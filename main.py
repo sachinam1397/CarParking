@@ -28,7 +28,7 @@ class parking_lot:
             print("Sorry no slot available.")
             return
         # Vehicle Number is not valid
-        if(re.search(parking_lot.vehicle_regex,vehicle_number) == None):
+        if(re.search(parking_lot.vehicle_regex,vehicle_number) is None):
             print("Invalid Vehicle Number. Please recheck the number.")
             return
         car_instance = car_details(
@@ -69,7 +69,7 @@ class parking_lot:
 
     def Slot_number_for_car_with_number(self,vehicle_number):
         # Vehicle Number is not valid
-        if(re.search(parking_lot.vehicle_regex,vehicle_number) == None):
+        if(re.search(parking_lot.vehicle_regex,vehicle_number) is None):
             print("Invalid vehicle number. Please recheck")
             return
         if(parking_lot.vehicle_instance_mapping[vehicle_number] is None):
@@ -77,18 +77,6 @@ class parking_lot:
             return
         print(parking_lot.vehicle_instance_mapping[vehicle_number].slot_number)
         return
-
-    def list_of_values(self,driver_age):
-        # Age cannot be negative
-        if(driver_age < 1):
-            print("Age cannot be negative or zero")
-        list_of_values = []
-        for key, value in parking_lot.vehicle_instance_mapping:
-            if(value.driver_age == driver_age):
-                list_of_values.append(str(value.vehicle_number))
-        if(len(list_of_values) == 0):
-            print("No such driver with matching age have parked the car.")
-        print(",".join(list_of_values))
 
     def Slot_numbers_for_driver_of_age(self,driver_age):
         # Age cannot be negative
@@ -101,6 +89,7 @@ class parking_lot:
         if(len(list_of_slots) == 0):
             print("")
             return
+        list_of_slots.sort()
         print(",".join(list_of_slots))
 
     def Vehicle_registration_number_for_driver_of_age(self,driver_age):
@@ -110,7 +99,7 @@ class parking_lot:
         list_of_vehicle_numbers = []
         for key, value in parking_lot.vehicle_instance_mapping.items():
             if(value.driver_age == driver_age):
-                list_of_vehicle_numbers.append(str(value.vehicle_number))
+                list_of_vehicle_numbers.append(value.vehicle_number)
         if(len(list_of_vehicle_numbers) == 0):
             print("")
             return
@@ -131,7 +120,7 @@ if __name__ == "__main__":
     parking_lot_instance = None
     for line in Lines:
         parking_input = line.strip().split(" ")
-        if(parking_lot_instance == None and parking_input[0] != "Create_parking_lot"):
+        if(parking_lot_instance is None and parking_input[0] != "Create_parking_lot"):
             print("No parking lot is created till now.")
             continue;
         if(parking_input[0] == 'Create_parking_lot'):
@@ -144,6 +133,7 @@ if __name__ == "__main__":
             parking_action = getattr(parking_lot_instance,parking_input[0])
         except Exception as error:
             print("[ ERROR ] " + str(error))
+            continue
         try:
             if(len(parking_input) == 4):
                 parking_action(
@@ -152,6 +142,6 @@ if __name__ == "__main__":
             elif(len(parking_input) == 2):
                 parking_action(int(parking_input[1]) if parking_input[1].isdigit() else parking_input[1])
             else:
-                print("Wrong Input")
+                print("OOPS We have received wrong input")
         except Exception as error:
             print("[ ERROR ] " + str(error))
